@@ -1,0 +1,67 @@
+package com.nuc.controller;
+
+import com.nuc.model.OrderBookEntity;
+import com.nuc.model.Page;
+import com.nuc.model.User;
+import com.nuc.service.OrderBookService;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+
+/**
+ * @program: book
+ * @description:
+ * @author: Zhang Chi
+ * @create: 2019-09-03 11:13
+ */
+@Controller
+@RequestMapping("/orderBook")
+public class OrderBookController {
+    @Resource
+    private OrderBookService orderBookService;
+
+    /*
+     * 通过用户ID查询购物记录
+     */
+    @RequestMapping("/query")
+    @ResponseBody
+    public Object Query(Page<OrderBookEntity> page,  HttpSession session) throws Exception{
+       User user=(User) session.getAttribute("user");
+        OrderBookEntity orderBookEntity = new OrderBookEntity();
+        orderBookEntity.setuId(user.getuId());
+        page.setParamEntity(orderBookEntity);
+        page = orderBookService.selectPageUseDyc(page);
+        return page.getPageMap();
+    }
+
+    /*
+     * 通过用户ID查询购物记录
+     */
+    @RequestMapping("/allQuery")
+    @ResponseBody
+    public Object allQuery(Page<OrderBookEntity> page,  HttpSession session) throws Exception{
+        User user=(User) session.getAttribute("user");
+        OrderBookEntity orderBookEntity = new OrderBookEntity();
+        orderBookEntity.setuId(user.getuId());
+        page.setParamEntity(orderBookEntity);
+        page = orderBookService.selectAllPageListUseDyc(page);
+        return page.getPageMap();
+    }
+//删除订单及购物记录
+    @RequestMapping("/delete")
+    @ResponseBody
+    public Object delete(String[] pks) throws Exception {
+        int single = 0;
+        OrderBookEntity  orderBookEntity=null;
+        for (String oId : pks) {
+            orderBookEntity = new OrderBookEntity();
+            orderBookEntity.setoId(Integer.parseInt(oId));
+            single = orderBookService.delete(orderBookEntity);
+        }
+        return single;
+    }
+
+}

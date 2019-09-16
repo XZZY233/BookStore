@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nuc.dao.ShopMapper">
+
+    <resultMap type="com.nuc.model.Shop" id="typeResultMap">
+        <id column="sId" property="sId" jdbcType="INTEGER" />
+        <result column="uId" property="uId" javaType="INTEGER"/>
+        <result column="bId" property="bId" javaType="INTEGER"/>
+        <result column="bPath" property="bPath" />
+        <result column="bName" property="bName" />
+        <result column="sNumber" property="sNumber" javaType="INTEGER"/>
+        <result column="bPrice" property="bPrice" />
+    </resultMap>
+
+    <select id="getListByUId" resultMap="typeResultMap" parameterType="com.nuc.model.User">
+        select * from  shop a inner join book b  on a.bId=b.bId where a.uId=#{uId}
+    </select>
+
+    <insert id="insert" parameterType="com.nuc.model.Shop">
+        insert into shop
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uId!=null">
+                uId,
+            </if>
+            <if test="bId!=null">
+                bId,
+            </if>
+            <if test="sNumber!=null" >
+                sNumber
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="uId!=null">
+                #{uId},
+            </if>
+            <if test="bId!=null">
+                #{bId},
+            </if>
+            <if test="sNumber!=null" >
+                #{sNumber}
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="delete" parameterType="com.nuc.model.Shop">
+      DELETE FROM  shop WHERE sId=#{sId}
+    </delete>
+</mapper>

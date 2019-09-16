@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nuc.dao.UserMapper">
+    <resultMap type="com.nuc.model.User" id="userResultMap">
+        <id column="uId" property="uId" jdbcType="INTEGER" />
+        <result column="uName" property="uName" jdbcType="VARCHAR" />
+        <result column="uTel" property="uTel" jdbcType="VARCHAR" />
+        <result column="uPwd" property="uPwd" jdbcType="VARCHAR" />
+        <result column="uAddress" property="uAddress" jdbcType="VARCHAR" />
+        <result column="uGender" property="uGender" jdbcType="VARCHAR" />
+        <result column="uOnline" property="uOnline" jdbcType="VARCHAR" />
+
+        <collection property="orders" column="uId" select="com.nuc.dao.OrderMapper.findByuId"></collection>
+    </resultMap>
+<!--    登录验正-->
+    <select id="select" parameterType="com.nuc.model.User" resultMap="userResultMap">
+        SELECT * FROM user WHERE uTel=#{uTel} AND uPwd=#{uPwd}
+    </select>
+<!--    通过电话查询单个用户-->
+    <select id="findByUtel" parameterType="com.nuc.model.User" resultMap="userResultMap">
+        SELECT * FROM user WHERE uTel=#{uTel}
+    </select>
+
+        <!--注册用户-->
+    <insert id="insert" parameterType="com.nuc.model.User"  >
+        INSERT INTO user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uName!=null">
+                uName,
+            </if>
+            <if test="uTel!=null">
+                uTel,
+            </if>
+            <if test="uPwd!=null">
+                uPwd,
+            </if>
+            <if test="uAddress!=null">
+                uAddress,
+            </if>
+            <if test="uGender!=null" >
+                uGender
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="uName!=null">
+                #{uName},
+            </if>
+            <if test="uTel!=null">
+               #{uTel},
+            </if>
+            <if test="uPwd!=null">
+               #{uPwd},
+            </if>
+            <if test="uAddress!=null">
+                #{uAddress},
+            </if>
+            <if test="uGender!=null" >
+                #{uGender}
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 通过多条件分页查询，返回数据集 -->
+    <select id="selectPageListUseDyc" parameterType="com.nuc.model.Page"
+            resultMap="userResultMap">
+        SELECT uId,uName,uTel,uPwd,uAddress,uGender,uOnline FROM user
+        <where>
+            <if test="paramEntity.uName!=null">and uName like #{paramEntity.uName}</if>
+        </where>
+        order by uOnline
+        limit #{start},#{rows}
+    </select>
+
+    <!-- 通过多条件分页查询，返回总记录数 -->
+    <select id="selectPageCountUseDyc" parameterType="com.nuc.model.Page"
+            resultType="Integer">
+        select count(1) FROM user
+        <where>
+            <if test="paramEntity.uName!=null">and uName like #{paramEntity.uName}</if>
+        </where>
+    </select>
+    
+<!--    删除用户-->
+    <delete id="delete" parameterType="com.nuc.model.User">
+        DELETE FROM  user WHERE uId=#{uId}
+    </delete>
+
+    <!-- 新增： 判断用户是否已存在 -->
+    <select id="objectNameIsExsit"  parameterType="com.nuc.model.User"  resultType="Integer">
+	  select count(1) from user where uTel=#{uTel}
+	</select>
+
+    <!-- 修改：根据电话号码，主键 查询是已否存在 -->
+    <select id="objectNameAndIdIsExsit" parameterType="com.nuc.model.User"  resultType="Integer">
+	  select count(1) from user where uTel=#{uTel} and uId!=#{uId}
+	</select>
+
+    <!--修改用户信息-->
+    <update id="update" parameterType="com.nuc.model.User">
+     update user set
+        <trim  suffixOverrides=",">
+            <if test="uName!=null">
+                uName=#{uName},
+            </if>
+            <if test="uTel!=null">
+                uTel=#{uTel},
+            </if>
+            <if test="uPwd!=null">
+                uPwd=#{uPwd},
+            </if>
+            <if test="uAddress!=null">
+                uAddress=#{uAddress},
+            </if>
+            <if test="uGender!=null" >
+                uGender=#{uGender}
+            </if>
+        </trim>
+        where uId=#{uId}
+    </update>
+
+    <update id="onLine" parameterType="Integer">
+        update user set uOnline="在线" where uId=#{uId}
+    </update>
+
+    <update id="outLine" parameterType="Integer">
+        update user set uOnline="离线" where uId=#{uId}
+    </update>
+
+    <select id="onLineNumber"  resultType="Integer">
+        select count(1) from user where uOnline="在线"
+    </select>
+</mapper>

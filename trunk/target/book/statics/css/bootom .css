@@ -1,0 +1,15 @@
+@charset "UTF-8";
+#friend{ margin:0; padding:0;}
+#friend{ font:12px/20px Tahoma;}
+#friend img{ border:0;}
+#friend li{ list-style:none;}
+
+#friend a{ color:#335884; text-decoration:none;}
+#friend a:hover{ color:#f00; text-decoration:underline;}
+#friend{ clear:both; height:64px; margin:0 auto;}
+    .friend_list{ height:40px; overflow:hidden; border:1px solid #bfd0d5;}
+    .friend_list ul{ margin:14px 360px 0;}
+    .friend_list li{ float:left; margin-right:10px; white-space:nowrap;}
+#footer{ clear:both; width:947px; margin:14px auto 0; text-align:center;}
+    #footer p{ font:14px/24px Arial; color:#999;}
+    #footer p.copyright{ color:#333; margin-top:15px;}

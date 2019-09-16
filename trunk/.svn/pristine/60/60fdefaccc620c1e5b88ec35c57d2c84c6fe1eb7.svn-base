@@ -1,0 +1,175 @@
+package com.nuc.controller;
+
+
+import com.nuc.model.Book;
+import com.nuc.model.Page;
+import com.nuc.service.BookService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.List;
+
+@Controller
+@RequestMapping(value = "/books")
+public class BookListController extends BaseController {
+
+    @Autowired
+    private BookService bookService;
+
+    //返回相关数据
+    @RequestMapping(value = "/list")
+    public String list(HttpServletRequest request){
+
+        //类别书
+        for (int i=1;i<=8;i++){
+            String key = "list_type"+i;
+            request.setAttribute(key,bookService.findBooksByTid(i));
+        }
+
+        //排行榜
+        request.setAttribute("list_top",bookService.findBooksListByBclick());
+
+        //所有书
+        request.setAttribute("list_books",bookService.findAllbooks());
+
+        return "forward:/WEB-INF/jsp/indexpage/index.jsp";
+    }
+
+//    @RequestMapping(value = "/search")
+//    public ModelAndView search(HttpServletRequest request){
+//        System.out.println("查询");
+//        ModelAndView mav = new ModelAndView();
+//
+//        String search_bname = request.getParameter("search_content_text");
+//        BookService bookService = new BookServiceImpl();
+//        Book book = bookService.findBookByBname(search_bname);
+//        System.out.println("search_bname"+search_bname);
+//        System.out.println("book"+book);
+//        if(book == null){
+//            mav.setViewName("index_elements/index_nobook");
+//        }else {
+//            mav.addObject("book",book);
+//            mav.setViewName("book");
+//        }
+//        return mav;
+//    }
+
+    //书籍详情
+    @RequestMapping("/bookInfo")
+    public String bookInfo(int bookId, HttpServletRequest request){
+        request.setAttribute("book",bookService.findBookByBid(bookId));
+        return "forward:/WEB-INF/jsp/indexpage/book.jsp";
+    }
+
+    //显示和图片
+    @RequestMapping("/image")
+    public String bookImage(HttpServletRequest request, HttpServletResponse response) throws IOException, IOException {
+        String path = request.getParameter("path");
+        if (path == null || path.isEmpty()) {
+            return null;
+        }
+        File file = new File(path);
+        if (!file.exists() || file.isDirectory()) {
+            return null;
+        }
+        FileInputStream fileInputStream = new FileInputStream(file);
+        ServletOutputStream outputStream = response.getOutputStream();
+        byte bs[] = new byte[1024];
+        int l;
+        while ((l = fileInputStream.read(bs)) != -1) {
+            outputStream.write(bs, 0, l);
+        }
+        outputStream.flush();
+        outputStream.close();
+        fileInputStream.close();
+
+        return null;
+    }
+
+    //查询图书
+    @RequestMapping("/query")
+    @ResponseBody
+    public Object Query(Page<Book> page, Book book, String keyWord) throws Exception{
+        book.setbName(keyWord);
+        page.setParamEntity(book);
+        page = bookService.selectPageUseDyc(page);
+        return page.getPageMap();
+    }
+
+    //判断图书是否存在（ajax）
+    @RequestMapping("/validatebookisexsit")
+    @ResponseBody
+    public Object ValidateBName(String bName)
+    {
+        int result =0;
+        Book book = new Book();
+        book.setbName(bName);
+        result = bookService.objectNameIsExsit(book);
+        return result;
+    }
+
+    //添加图书（ajaxx）
+    @RequestMapping("/insert")
+    @ResponseBody
+    public Object Insert(@RequestParam(value = "bName") String bName,@RequestParam(value = "bPath") MultipartFile bPath) throws Exception {
+        System.out.println("BookContro-book:"+bName);
+        System.out.println("BookContro-file:"+bPath);
+//        int count = bookService.insert(book);
+        return 0;
+    }
+
+    //删除图书
+    @RequestMapping("/deleteList")
+    @ResponseBody
+    // 如果返回json格式，需要这个注解，
+    public Object Delete(String[] pks) throws Exception {
+
+        System.out.println("BookListController"+pks);
+        int count = 0;
+        int single = 0;
+        Book book=null;
+        for (String bid : pks) {
+            book = new Book();
+            book.setbId(Integer.parseInt(bid));
+            single = bookService.delete(book);
+            if (single == 1) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+//     //修改：根据电话，主键 查询用户是已否存在
+//    @RequestMapping("/validateupdatebookisexsit")
+//    @ResponseBody
+//    public Object Validateupdateuserisexsit(String uTel,String uId)
+//    {
+//        int result =0;
+//        User user=new User();
+//        user.setuId(Integer.parseInt(uId));
+//        user.setuTel(uTel);
+//        System.out.println(user);
+//        result=userService.objectNameAndIdIsExsit(user);
+//        System.out.println(result);
+//        return result;
+//    }
+
+
+    //更新并保存
+    @RequestMapping("/update")
+    @ResponseBody
+    public Object Update(Book book) throws Exception {
+        int count = bookService.update(book);
+        return count;
+    }
+}

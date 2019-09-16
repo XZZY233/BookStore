@@ -1,0 +1,8 @@
+package com.nuc.dao;
+
+import com.nuc.model.Type;
+
+public interface TypeMapper extends BaseMapper<Type> {
+    //判断种类名是否存在
+    Type findByTname(Type type);
+}

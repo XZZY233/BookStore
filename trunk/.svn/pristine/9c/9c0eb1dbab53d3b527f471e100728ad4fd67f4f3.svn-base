@@ -1,0 +1,16 @@
+package com.nuc.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping(value = "/backStage")
+public class BackStageController {
+
+    @RequestMapping(value = "/index")
+    public String indexPage(){
+        System.out.println("Controller");
+        return "forward:/WEB-INF/backstage/index_admin.jsp";
+    }
+
+}

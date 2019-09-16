@@ -1,0 +1,29 @@
+#backboad{
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+}
+#lp{
+    font-size: 19px;
+    line-height: 35px;
+    background: #78b5d9;
+}
+#backboad{
+    width: 258px;
+    float: right;
+    position: absolute;
+    top: 102px;
+    right: 2px;
+}
+.lli{
+    list-style: none;
+    border: rgba(228,252,255,0.88) solid 1px;
+    background: rgba(228,252,255,0.88);
+    font-family: 华文楷体;
+    line-height: 20px;
+    font-size: 18px;
+
+}
+.la{
+    text-decoration:none;
+}

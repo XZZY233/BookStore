@@ -1,0 +1,15 @@
+package com.nuc.service.impl;
+
+import com.nuc.model.Admin;
+import com.nuc.service.AdminService;
+import org.springframework.stereotype.Service;
+
+/**
+ * @program: book
+ * @description:
+ * @author: Zhang Chi
+ * @create: 2019-08-31 10:53
+ */
+@Service("adminService")
+public class AdminServiceImpl extends BaseServiceImpl<Admin> implements AdminService {
+}

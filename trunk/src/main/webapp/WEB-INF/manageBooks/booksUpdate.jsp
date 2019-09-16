@@ -1,0 +1,152 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: lenovo
+  Date: 2019/8/31
+  Time: 17:04
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" isELIgnored="false" language="java" %>
+<%@ include file="/statics/common/common.jsp"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>修改图书</title>
+    <style>
+        .add_form{
+            position: relative;
+            left: -5vh;
+            top: 23vh;
+            text-align: center;
+        }
+        li{
+            list-style: none;
+        }
+    </style>
+
+    <script type="text/javascript">
+        function validateBName(value)
+        {
+            var bId=$("#bId").val();
+            $.ajax({
+                url: "<%=bathPath%>/books/validateupdatebooksisexsit",
+                type:"POST",
+                //设置为传统方式传送参数
+                traditional:true,
+                data:{bName:value,bId:bId},
+                dataType:'json',
+                success: function(result){
+                    if(result>0){
+                        $("#msg").text("该书名已存在，请重新输入！");
+                    }else{
+                        $("#msg").text("");
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert('输入错误','请联系代码管理员处理！','error');
+                }
+            });
+        }
+
+    </script>
+</head>
+<body>
+<div class="add_form">
+    <form id="ff" method="post" enctype="multipart/form-data">
+        <ul>
+            <li><input type="hidden" class="easyui-textbox" name="bId" id="bId" style="width: 200px"></li>
+            <li>书名: <input type="text" class="easyui-textbox" name="bName" onblur="validateBName(this.value)" style="width: 200px"></li><br>
+            <li>作者: <input type="text" class="easyui-textbox" name="bAuthor" style="width: 200px"></li><br>
+            <li>价格: <input type="text" class="easyui-textbox" name="bPrice" style="width: 200px"></li><br>
+            <li>介绍: <input type="text" class="easyui-textbox" name="bDescribe" style="width: 200px"></li><br>
+            <li>库存: <input type="text" class="easyui-textbox" name="bNumber" style="width: 200px"></li><br>
+
+            <li>封面: <input type="file" class="easyui-filebox" name="bPath" style="width: 200px"></li><br>
+            <c:forEach items="${types}" var="t">
+                <li>${t.tName}: <input type="checkbox" class="easyui-checkbox" name="bType" value="${t.tName}" style="width: 200px"></li><br>
+            </c:forEach>
+
+            <li><em id="msg" style="color: red;"></em></li>
+        </ul>
+        <a id="btn" href="#" class="easyui-linkbutton" >提交</a>
+        <a id="btn2" href="#" class="easyui-linkbutton" onclick="javascript:parent.$('#win').window('close');" >关闭</a>
+
+    </form>
+</div>
+<script type="text/javascript">
+    $(function() {
+        var win = parent.$("iframe[title='图书列表']").get(0).contentWindow;//返回ifram页面窗体对象（window)
+
+        var row = win.$('#dg').datagrid("getSelected");
+
+        //赋值
+        $('#ff').form('load',{
+            bId:row.bId,
+            bName:row.bName,
+            bAuthor:row.bAuthor,
+            bPrice:row.bPrice,
+            bDescribe:row.bDescribe,
+            bNumber:row.bNumber,
+        });
+
+        $("[name='bName']").validatebox({
+            required : true,
+            missingMessage : '请填写图书名！'
+        });
+
+        $("[name='bAuthor']").validatebox({
+            required : true,
+            missingMessage : '请填写作者！'
+        });
+
+        $("[name='bPrice']").validatebox({
+            required : true,
+            missingMessage : '请填写价格！'
+        });
+
+        $("[name='bDescribe']").validatebox({
+            required : true,
+            missingMessage : '请填写介绍！'
+        });
+
+        $("[name='bNumber']").validatebox({
+            required : true,
+            missingMessage : '请填写库存！'
+        });
+
+
+        //禁用验证
+        $("#ff").form("disableValidation");
+
+        $("#btn").click(function() {
+            $("#ff").form("enableValidation");
+            if ($("#ff").form("validate")) {
+                $('#ff').form('submit', {
+                    url : '<%=bathPath%>/books/update',
+                    onSubmit : function() {
+                        return true;
+                    },
+                    success : function(count) {
+                        //可以定义为对应消息框
+                        if(count>0){
+                            alert("修改成功！");
+                        }else{
+                            alert("修改失败！");
+                        }
+                        parent.$("#win").window("close");
+                        win.$("#dg").datagrid("reload");
+                        //清除所有勾选的行
+                        win.$("#dg").datagrid("clearSelections");
+                    }
+                });
+
+            }
+
+        });
+
+    });
+</script>
+</body>
+</html>

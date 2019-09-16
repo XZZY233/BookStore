@@ -1,0 +1,306 @@
+package com.nuc.controller;
+
+
+import com.nuc.model.Book;
+import com.nuc.model.BookType;
+import com.nuc.model.Page;
+import com.nuc.model.Type;
+import com.nuc.service.BookService;
+import com.nuc.service.BookTypeService;
+import com.nuc.service.TypeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.math.BigDecimal;
+import java.util.List;
+
+@Controller
+@RequestMapping(value = "/books")
+public class BookListController extends BaseController {
+
+    @Autowired
+    private BookService bookService;
+
+    @Autowired
+    private TypeService typeService;
+
+    @Autowired
+    private BookTypeService bookTypeService;
+
+
+    //返回相关数据
+    @RequestMapping(value = "/list")
+    public String list(HttpServletRequest request){
+
+        //类别书
+        for (int i=1;i<=8;i++){
+            String key = "list_type"+i;
+            request.setAttribute(key,bookService.findBooksByTid(i));
+        }
+
+        //排行榜
+        request.setAttribute("list_top",bookService.findBooksListByBclick());
+
+        //所有书
+        request.setAttribute("list_books",bookService.findAllbooks());
+
+        return "forward:/WEB-INF/jsp/indexpage/index.jsp";
+    }
+
+//    @RequestMapping(value = "/search")
+//    public ModelAndView search(HttpServletRequest request){
+//        System.out.println("查询");
+//        ModelAndView mav = new ModelAndView();
+//
+//        String search_bname = request.getParameter("search_content_text");
+//        BookService bookService = new BookServiceImpl();
+//        Book book = bookService.findBookByBname(search_bname);
+//        System.out.println("search_bname"+search_bname);
+//        System.out.println("book"+book);
+//        if(book == null){
+//            mav.setViewName("index_elements/index_nobook");
+//        }else {
+//            mav.addObject("book",book);
+//            mav.setViewName("book");
+//        }
+//        return mav;
+//    }
+
+    //书籍详情
+    @RequestMapping("/bookInfo")
+    public String bookInfo(int bookId, HttpServletRequest request){
+
+        request.setAttribute("book",bookService.findBookByBid(bookId));
+        return "forward:/WEB-INF/jsp/indexpage/book.jsp";
+    }
+
+    //显示和图片
+    @RequestMapping("/image")
+    public String bookImage(HttpServletRequest request, HttpServletResponse response) throws IOException, IOException {
+        String path = request.getParameter("path");
+        if (path == null || path.isEmpty()) {
+            return null;
+        }
+        File file = new File(path);
+        if (!file.exists() || file.isDirectory()) {
+            return null;
+        }
+        FileInputStream fileInputStream = new FileInputStream(file);
+        ServletOutputStream outputStream = response.getOutputStream();
+        byte bs[] = new byte[1024];
+        int l;
+        while ((l = fileInputStream.read(bs)) != -1) {
+            outputStream.write(bs, 0, l);
+        }
+        outputStream.flush();
+        outputStream.close();
+        fileInputStream.close();
+
+        return null;
+    }
+
+    //查询图书
+    @RequestMapping("/query")
+    @ResponseBody
+    public Object Query(Page<Book> page, Book book, String keyWord) throws Exception{
+        book.setbName(keyWord);
+        page.setParamEntity(book);
+        page = bookService.selectPageUseDyc(page);
+        return page.getPageMap();
+    }
+
+    //判断图书是否存在（ajax）
+    @RequestMapping("/validatebookisexsit")
+    @ResponseBody
+    public Object ValidateBName(String bName)
+    {
+        int result =0;
+        Book book = new Book();
+        book.setbName(bName);
+        result = bookService.objectNameIsExsit(book);
+        return result;
+    }
+
+    //跳转并传类型
+    @RequestMapping("/booksAdd")
+    public String add(HttpServletRequest request){
+        List<Type> types = typeService.findAllType();
+        request.setAttribute("types",types);
+        return "forward:/WEB-INF/manageBooks/booksAdd.jsp";
+    }
+
+    //添加图书（ajaxx）
+    @RequestMapping("/insert")
+    @ResponseBody
+    @Transactional
+    public Object Insert
+    (@RequestParam(value = "bName") String bName,
+     @RequestParam(value = "bAuthor") String bAuthor,
+     @RequestParam(value = "bPrice") String bPrice,
+     @RequestParam(value = "bDescribe") String bDescribe,
+     @RequestParam(value = "bNumber") String bNumber,
+     @RequestParam(value = "bPath") MultipartFile bPath,
+     @RequestParam(value = "bType") String[] bType)
+            throws Exception {
+        BigDecimal price = new BigDecimal(bPrice);
+        int number = Integer.valueOf(bNumber);
+
+        //文件上传
+        //判断上传类型
+        String pName = bPath.getOriginalFilename();
+        String ext = pName.substring(pName.indexOf(".")+1);
+        if (!(ext.equals("png") || ext.equals("gif") || ext.equals("jpg"))){
+            throw new RuntimeException();
+        }
+        InputStream input = bPath.getInputStream();//输入流
+        OutputStream out = new FileOutputStream("D:\\File\\ssmBook3\\trunk\\src\\main\\webapp\\statics\\images\\"+bPath.getOriginalFilename());//输出流
+        byte[] bs = new byte[1024];
+        int len = -1;
+        while ((len = input.read(bs)) != -1){
+            out.write(bs,0,len);
+        }
+        out.close();
+        input.close();
+
+        Book book = new Book();
+        book.setbName(bName);
+        book.setbAuthor(bAuthor);
+        book.setbPrice(price);
+        book.setbDescribe(bDescribe);
+        book.setbNumber(number);
+        book.setbPath(bPath.getOriginalFilename());
+
+        int count1 = bookService.insert(book);
+
+        int b_id = bookService.findBidByBname(bName);
+        int count3 = 0;
+        for (String str:bType) {
+            int tId = typeService.findTidByTname(str);
+            BookType bookType = new BookType();
+            bookType.setbId(b_id);
+            bookType.settId(tId);
+            int count2 = bookTypeService.insert(bookType);
+            count3 = count2*count2;
+        }
+        if (count1 != 0 && count3 != 0){
+            return 1;
+        }else {
+            throw new RuntimeException();
+        }
+    }
+
+    //删除图书
+    @RequestMapping("/deleteList")
+    @ResponseBody
+    // 如果返回json格式，需要这个注解，
+    public Object Delete(String[] pks) throws Exception {
+        int count = 0;
+        int single = 0;
+        Book book=null;
+        for (String bid : pks) {
+            book = new Book();
+            book.setbId(Integer.parseInt(bid));
+            single = bookService.delete(book);
+            if (single == 1) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+     //修改：根据书名，主键 查询用户是已否存在
+    @RequestMapping("/validateupdatebooksisexsit")
+    @ResponseBody
+    public Object validateupdatebooksisexsit(String bName,String bId)
+    {
+        int result =0;
+        Book book=new Book();
+        book.setbId(Integer.parseInt(bId));
+        book.setbName(bName);
+        result=bookService.objectNameAndIdIsExsit(book);
+        return result;
+    }
+
+
+    //跳转并传类型
+    @RequestMapping("/booksUpdate")
+    public String update(HttpServletRequest request){
+        List<Type> types = typeService.findAllType();
+        request.setAttribute("types",types);
+        return "forward:/WEB-INF/manageBooks/booksUpdate.jsp";
+    }
+
+    //更新并保存
+    @RequestMapping("/update")
+    @ResponseBody
+    public Object Update
+    (@RequestParam(value = "bId") int bId,
+     @RequestParam(value = "bName") String bName,
+     @RequestParam(value = "bAuthor") String bAuthor,
+     @RequestParam(value = "bPrice") String bPrice,
+     @RequestParam(value = "bDescribe") String bDescribe,
+     @RequestParam(value = "bNumber") String bNumber,
+     @RequestParam(value = "bPath") MultipartFile bPath,
+     @RequestParam(value = "bType") String[] bType)
+            throws Exception {
+
+        BigDecimal price = new BigDecimal(bPrice);
+        int number = Integer.valueOf(bNumber);
+
+        //文件上传
+        //判断上传类型
+        String pName = bPath.getOriginalFilename();
+        String ext = pName.substring(pName.indexOf(".")+1);
+        if (!(ext.equals("png") || ext.equals("gif") || ext.equals("jpg"))){
+            throw new RuntimeException();
+        }
+        InputStream input = bPath.getInputStream();//输入流
+        OutputStream out = new FileOutputStream("D:\\File\\ssmBook3\\trunk\\src\\main\\webapp\\statics\\images\\"+bPath.getOriginalFilename());//输出流
+        byte[] bs = new byte[1024];
+        int len = -1;
+        while ((len = input.read(bs)) != -1){
+            out.write(bs,0,len);
+        }
+        out.close();
+        input.close();
+
+        Book book = new Book();
+        book.setbId(bId);
+        book.setbName(bName);
+        book.setbAuthor(bAuthor);
+        book.setbPrice(price);
+        book.setbDescribe(bDescribe);
+        book.setbNumber(number);
+        book.setbPath(bPath.getOriginalFilename());
+        int count1 = bookService.update(book);
+
+        int b_id = bookService.findBidByBname(bName);
+        int count3 = 0;
+        BookType bookType1 = new BookType();
+        bookType1.setbId(b_id);
+        bookTypeService.delete(bookType1);
+        for (String str:bType) {
+            int tId = typeService.findTidByTname(str);
+            BookType bookType2 = new BookType();
+            bookType2.setbId(b_id);
+            bookType2.settId(tId);
+            int count2 = bookTypeService.insert(bookType2);
+            count3 = count2*count2;
+        }
+        if (count1 != 0 && count3 != 0){
+            return 1;
+        }else {
+            throw new RuntimeException();
+        }
+    }
+
+}

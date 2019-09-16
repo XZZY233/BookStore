@@ -1,0 +1,12 @@
+package com.nuc.service;
+
+import com.nuc.model.Admin;
+
+/**
+ * @program: book
+ * @description:
+ * @author: Zhang Chi
+ * @create: 2019-08-31 10:52
+ */
+public interface AdminService extends BaseService<Admin> {
+}

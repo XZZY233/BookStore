@@ -1,0 +1,97 @@
+*{
+    padding: 0px;
+    margin: 0px;
+
+}
+
+body{
+    font-family: "微软雅黑";
+    background: #f4f4f4;
+}
+a{
+     text-decoration: none;
+        color: black;
+    font-size: 16px;
+ }
+a:active{
+    color: white;
+}
+#perCentre p:hover{
+    background: #4cabff;
+
+}
+#perCentre,
+#showData{
+
+    float: left;
+    border: black 1px solid;
+    height: 65vh;
+    border-radius: 12px;
+}
+#perCentre{
+    background:#78b4d8 ;
+    margin-left:25%;
+    width: 150px;
+    text-align: center;
+}
+#left_first,
+#left_second{
+border-bottom: black 1px solid;
+}
+#showData{
+    text-align: center;
+    line-height: 20px;
+    width: 40%;
+}
+#showData form input:focus{
+    outline: none;
+    -webkit-box-shadow: 0 0 5px #78b4d8;
+    box-shadow: 0 0 5px #78b4d8;
+}
+form td{
+    margin: 10px auto;
+}
+.form_sigup{
+    width: 120px;
+    margin: 20px auto;
+    padding: 10px;
+    border: 1px solid  #cccbcb;
+    border-radius: 7px;
+    font-size: 1em;
+    font-weight: bold;
+    color: #fff;
+    background: #78b4d8;
+    cursor: pointer;
+}
+.text{
+    width: 77%;
+    height: 20px;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid  #cccbcb;
+    border-radius: 7px;
+    letter-spacing: 1px;
+    width: 200px;
+}
+#showData h3{
+    margin-top: 25px;
+    color: #4cabff;
+    font-size: 19px;
+}
+form span{
+    color: #78b4d8;
+}
+#per_order{
+}
+#per_order td{
+    padding: 14px;
+    font-size: 16px;
+}
+#per_order a{
+    color:#78b4d8 ;
+    font-size: 16px;
+    text-decoration:cornflowerblue;
+}
+#per_order a:active{
+    color:white ;
+}

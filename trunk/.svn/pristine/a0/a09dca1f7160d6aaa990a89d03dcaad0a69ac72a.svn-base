@@ -1,0 +1,11 @@
+import com.nuc.service.BookService;
+import com.nuc.service.impl.BookServiceImpl;
+import org.junit.Test;
+
+public class TestSelectAll {
+    @Test
+    public void allBooks(){
+        BookService booksService = new BookServiceImpl();
+        System.out.println("BookService:"+booksService.findAllbooks());
+    }
+}

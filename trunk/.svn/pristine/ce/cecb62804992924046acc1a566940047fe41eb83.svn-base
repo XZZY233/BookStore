@@ -1,0 +1,14 @@
+package com.nuc.service.impl;
+
+import com.nuc.model.User;
+import com.nuc.service.UserService;
+
+/**
+ * @program: book
+ * @description:
+ * @author: Zhang Chi
+ * @create: 2019-08-30 17:56
+ */
+public class UserServiceImpl extends BaseServiceImpl<User> implements UserService {
+
+}

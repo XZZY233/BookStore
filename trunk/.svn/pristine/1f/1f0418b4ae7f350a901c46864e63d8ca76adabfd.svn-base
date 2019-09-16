@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nuc.dao.BookMapper">
+    <resultMap type="com.nuc.model.Book" id="booksResultMap">
+        <id column="bId" property="bId" jdbcType="INTEGER" />
+        <result column="bName" property="bName" jdbcType="VARCHAR" />
+        <result column="bAuthor" property="bAuthor" jdbcType="VARCHAR" />
+        <result column="bPrice" property="bPrice" jdbcType="DECIMAL" />
+        <result column="bDescribe" property="bDescribe" jdbcType="VARCHAR" />
+        <result column="bNumber" property="bNumber" jdbcType="INTEGER" />
+        <result column="bClickTimes" property="bClickTimes" jdbcType="INTEGER" />
+        <result column="bPath" property="bPath" jdbcType="VARCHAR" />
+        <result column="number" property="number" javaType="INTEGER"/>
+        <collection property="types" ofType="com.nuc.model.Type">
+            <id column="tId" property="tId" jdbcType="INTEGER"/>
+            <result column="tName" property="tName" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+    <select id="findAllbooks" resultMap="booksResultMap">
+		select bId,bName,bAuthor,bPrice,bDescribe,bNumber,bClickTimes,bPath
+		from book
+	</select>
+
+    <select id="findAllBookTypes" resultMap="booksResultMap">
+		SELECT *
+        FROM book b
+        INNER JOIN book_type m ON b.bId = m.bId
+        INNER JOIN type t ON m.tId = t.tId
+	</select>
+
+    <select id="findBooksByTid" resultMap="booksResultMap" parameterType="com.nuc.model.Type">
+        SELECT b.bId,bName,bAuthor,bPrice,bDescribe,bNumber,bClickTimes,bPath
+        FROM book b
+        INNER JOIN book_type m ON b.bId = m.bId
+        INNER JOIN type t ON m.tId = t.tId
+        WHERE t.tId = #{tId}
+    </select>
+
+    <select id="findBooksListByBclick" resultMap="booksResultMap">
+        select bId,bName,bAuthor,bPrice,bDescribe,bNumber,bClickTimes,bPath
+        from book
+        order by bClickTimes desc limit 0,12
+    </select>
+
+    <select id="findBookByBid" resultType="com.nuc.model.Book" parameterType="com.nuc.model.Book">
+        select bId,bName,bAuthor,bPrice,bDescribe,bNumber,bClickTimes,bPath
+        from book
+        where bId = #{bId}
+    </select>
+
+    <select id="findBookByBname" resultMap="booksResultMap" parameterType="com.nuc.model.Book">
+        select bId,bName,bAuthor,bPrice,bDescribe,bNumber,bClickTimes,bPath
+        from book
+        where bName = #{bName}
+    </select>
+
+    <!--添加图书-->
+    <insert id="insert" parameterType="com.nuc.model.Book"  >
+        INSERT INTO book
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bName!=null">
+                bName,
+            </if>
+            <if test="bAuthor!=null">
+                bAuthor,
+            </if>
+            <if test="bPrice!=null">
+                bPrice,
+            </if>
+            <if test="bDescribe!=null">
+                bDescribe,
+            </if>
+            <if test="bNumber!=null">
+                bNumber,
+            </if>
+            <if test="bPath!=null">
+                bPath,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="bName!=null">
+                #{bName},
+            </if>
+            <if test="bAuthor!=null">
+                #{bAuthor},
+            </if>
+            <if test="bPrice!=null">
+                #{bPrice},
+            </if>
+            <if test="bDescribe!=null">
+                #{bDescribe},
+            </if>
+            <if test="bNumber!=null" >
+                #{bNumber},
+            </if>
+            <if test="bPath!=null" >
+                #{bPath}
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 通过多条件分页查询，返回数据集 -->
+    <select id="selectPageListUseDyc" parameterType="com.nuc.model.Page"
+            resultMap="booksResultMap">
+        SELECT bId,bName,bAuthor,bPrice,bDescribe,bNumber,bClickTimes,bPath FROM book
+        <where>
+            <if test="paramEntity.bName!=null">and bName like #{paramEntity.bName}</if>
+        </where>
+        limit #{start},#{rows}
+    </select>
+
+    <!-- 通过多条件分页查询，返回总记录数 -->
+    <select id="selectPageCountUseDyc" parameterType="com.nuc.model.Page"
+            resultType="Integer">
+        select count(1) FROM book
+        <where>
+            <if test="paramEntity.bName!=null">and bName like #{paramEntity.bName}</if>
+        </where>
+    </select>
+
+    <!--    删除用户-->
+    <delete id="delete" parameterType="com.nuc.model.Book">
+        delete book,book_type from book right join book_type on book_type.bId = book.bId where book_type.bId = #{bId}
+    </delete>
+
+    <!-- 新增： 判断用户是否已存在 -->
+    <select id="objectNameIsExsit"  parameterType="com.nuc.model.Book"  resultType="Integer">
+	  select count(1) from book where bName=#{bName}
+	</select>
+
+    <!-- 修改：根据书名，主键 查询是已否存在 -->
+    <select id="objectNameAndIdIsExsit" parameterType="com.nuc.model.Book"  resultType="Integer">
+      select count(1) from book where bName=#{bName} and bId!=#{bId}
+    </select>
+
+    <!--修改图书信息-->
+    <update id="update" parameterType="com.nuc.model.Book">
+        update book set
+        <trim  suffixOverrides=",">
+            <if test="bName!=null">
+                bName=#{bName},
+            </if>
+            <if test="bAuthor!=null">
+                bAuthor=#{bAuthor},
+            </if>
+            <if test="bPrice!=null">
+                bPrice=#{bPrice},
+            </if>
+            <if test="bDescribe!=null">
+                bDescribe=#{bDescribe},
+            </if>
+            <if test="bNumber!=null" >
+                bNumber=#{bNumber},
+            </if>
+            <if test="bClickTimes!=null" >
+                bClickTimes=#{bClickTimes},
+            </if>
+            <if test="bPath!=null" >
+                bPath=#{bPath}
+            </if>
+        </trim>
+        where bId=#{bId}
+    </update>
+
+    <select id="findBooksByOId" parameterType="com.nuc.model.Order1" resultMap="booksResultMap">
+          select * from book where bId  in (select bId from book_order where oId=#{oId})
+    </select>
+
+    <select id="findBidByBname" parameterType="String" resultType="Integer">
+        select bId from book where bName=#{bName}
+    </select>
+
+    <select id="searchBookByBname" parameterType="String" resultMap="booksResultMap">
+         SELECT b.bId,bName,bAuthor,bPrice,bPath
+            FROM book b
+            WHERE b.bName LIKE #{bName}
+    </select>
+
+    <select id="getBooksCount" resultType="Integer">
+        select count(bid) from book
+    </select>
+
+    <select id="getPageBooksList" parameterType="Integer" resultMap="booksResultMap">
+         select * from book limit #{page},5
+    </select>
+
+</mapper>

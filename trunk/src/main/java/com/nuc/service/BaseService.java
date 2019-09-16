@@ -1,0 +1,47 @@
+package com.nuc.service;
+
+import com.nuc.model.Page;
+
+import java.util.List;
+
+/**
+ * @program: book
+ * @description:
+ * @author: Zhang Chi
+ * @create: 2019-08-30 17:25
+ */
+public interface BaseService<T>{
+    // 添加单个对象
+    public int insert(T entity) throws Exception;
+
+    // 修改单个对象
+    public int update(T entity) throws Exception;
+
+    // 删除单个对象
+    public int delete(T entity) throws Exception;
+
+    // 查询单个对象
+    public T select(T entity);
+
+    // 通过多条件分页查询
+    public Page<T> selectPageUseDyc(Page<T> page);
+
+    // 通过关键字分页查询所有数据列表(order用)
+    public Page<T> selectAllPageListUseDyc(Page<T> page);
+
+    //通过关键字返回所有未收货订单
+    public Page<T> selectAllUnfinishedUseDyc(Page<T> page);
+
+    // 根据名称进行判断
+    int objectNameIsExsit(T entity);
+
+    // 根据名称和主键进行判断
+    int objectNameAndIdIsExsit(T entity);
+
+    // 根据编号进行判断
+    int objectNumIsExsit(T entity);
+
+    // 根据名称进行判断
+    int objectNumAndIdIsExsit(T entity);
+
+}

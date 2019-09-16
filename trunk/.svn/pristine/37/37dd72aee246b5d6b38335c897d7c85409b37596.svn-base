@@ -1,0 +1,19 @@
+package com.nuc.dao;
+
+import com.nuc.model.User;
+
+/**
+ * @program: book
+ * @description:
+ * @author: Zhang Chi
+ * @create: 2019-08-30 10:48
+ */
+public interface UserMapper extends BaseMapper<User> {
+    public User login(User user);
+
+    /*
+     * 修改密码
+     */
+    int updatepwd(User u);
+
+}

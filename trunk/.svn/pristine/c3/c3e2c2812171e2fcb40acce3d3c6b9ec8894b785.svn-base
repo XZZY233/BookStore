@@ -1,0 +1,7 @@
+package com.nuc.service;
+
+import com.nuc.model.Type;
+
+public interface TypeService extends BaseService<Type> {
+    Type findByTname(Type type);
+}

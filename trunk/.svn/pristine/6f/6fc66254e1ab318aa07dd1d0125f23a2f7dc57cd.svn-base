@@ -1,0 +1,42 @@
+package com.nuc.service.impl;
+
+import com.nuc.dao.BaseMapper;
+import com.nuc.dao.UserMapper;
+import com.nuc.service.BaseService;
+import org.apache.poi.ss.formula.functions.T;
+import org.springframework.beans.factory.annotation.Autowired;
+
+/**
+ * @program: book
+ * @description:
+ * @author: Zhang Chi
+ * @create: 2019-08-30 17:27
+ */
+public abstract class BaseServiceImpl<T> implements BaseService<T> {
+
+    @Autowired
+    protected BaseMapper<T> baseMapper;
+
+    @Autowired
+    protected UserMapper userMapper;
+
+    @Override
+    public int insert(T entity) throws Exception {
+        return baseMapper.insert(entity);
+    }
+
+    @Override
+    public int update(T entity) throws Exception {
+        return baseMapper.update(entity);
+    }
+
+    @Override
+    public int delete(T entity) throws Exception {
+        return baseMapper.delete(entity);
+    }
+
+    @Override
+    public T select(T entity) {
+        return baseMapper.select(entity);
+    }
+}

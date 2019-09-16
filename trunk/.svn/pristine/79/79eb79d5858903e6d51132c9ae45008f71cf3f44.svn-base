@@ -1,0 +1,95 @@
+package com.nuc.controller;
+
+import com.nuc.model.Book;
+import com.nuc.model.Type;
+import com.nuc.service.BookService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.List;
+
+@Controller
+@RequestMapping(value = "/books")
+public class BookListController extends BaseController {
+
+    @Autowired
+    private BookService bookService;
+
+    //返回相关数据
+    @RequestMapping(value = "/list")
+    public String list(HttpServletRequest request){
+
+        //类别书
+        for (int i=1;i<=8;i++){
+            String key = "list_type"+i;
+            request.setAttribute(key,bookService.findBooksByTid(i));
+        }
+
+        //排行榜
+        request.setAttribute("list_top",bookService.findBooksListByBclick());
+
+        //所有书
+        request.setAttribute("list_books",bookService.findAllbooks());
+
+        return "forward:/WEB-INF/jsp/indexpage/index.jsp";
+    }
+
+//    @RequestMapping(value = "/search")
+//    public ModelAndView search(HttpServletRequest request){
+//        System.out.println("查询");
+//        ModelAndView mav = new ModelAndView();
+//
+//        String search_bname = request.getParameter("search_content_text");
+//        BookService bookService = new BookServiceImpl();
+//        Book book = bookService.findBookByBname(search_bname);
+//        System.out.println("search_bname"+search_bname);
+//        System.out.println("book"+book);
+//        if(book == null){
+//            mav.setViewName("index_elements/index_nobook");
+//        }else {
+//            mav.addObject("book",book);
+//            mav.setViewName("book");
+//        }
+//        return mav;
+//    }
+
+    //书籍详情
+    @RequestMapping("/bookInfo")
+    public String bookInfo(int bookId, HttpServletRequest request){
+        request.setAttribute("book",bookService.findBookByBid(bookId));
+        return "forward:/WEB-INF/jsp/indexpage/book.jsp";
+    }
+
+    //显示和图片
+    @RequestMapping("/image")
+    public String bookImage(HttpServletRequest request, HttpServletResponse response) throws IOException, IOException {
+        String path = request.getParameter("path");
+        if (path == null || path.isEmpty()) {
+            return null;
+        }
+        File file = new File(path);
+        if (!file.exists() || file.isDirectory()) {
+            return null;
+        }
+        FileInputStream fileInputStream = new FileInputStream(file);
+        ServletOutputStream outputStream = response.getOutputStream();
+        byte bs[] = new byte[1024];
+        int l;
+        while ((l = fileInputStream.read(bs)) != -1) {
+            outputStream.write(bs, 0, l);
+        }
+        outputStream.flush();
+        outputStream.close();
+        fileInputStream.close();
+
+        return null;
+    }
+}

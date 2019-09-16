@@ -1,0 +1,41 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: lenovo
+  Date: 2019/7/16
+  Time: 8:25
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page pageEncoding="UTF-8"%>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/statics/css/head.css">
+<script src="${pageContext.request.contextPath}/statics/js/jquery-1.12.4.js"></script>
+<meta charset="UTF-8">
+<script src="${pageContext.request.contextPath}/statics/js/head.js"></script>
+
+<div id="header">
+    <div id="top_login">
+        <c:set var="isLogin" value="${empty sessionScope.user}"/>
+        <c:if test="${isLogin}">
+        <label id="label"> 欢迎光临，请<a id="login_button" href="${pageContext.request.contextPath}/user/tolog">登录</a>
+        </c:if>
+            <c:if test="${!isLogin}">
+            <label id="label"> 欢迎光临，${sessionScope.user.uName}
+         | <a id="login_scar" href="${pageContext.request.contextPath}/shop/list" >我的购物车</a> | <a id="login_morder" href="${pageContext.request.contextPath}/base/goURL/personnoalDate/showOrder">我的订单</a></label>
+        </c:if>
+    </div>
+    <div id="nav">
+        <div id="logo"> <img id="logo_img" src="${pageContext.request.contextPath}/statics/images/bookslogo.png" alt="华轩书海"/> </div>
+        <div id="search_content">
+            <form id="form1" name="form1" method="get" action="${pageContext.request.contextPath}/books/search">
+                <input name="search_content_text" id="search_content_text" type="text">
+            </form>
+        </div>
+        <div id="search"> <img id="search_img" src="${pageContext.request.contextPath}/statics/images/search.png" alt="搜索" onclick="javascript:document.forms['form1'].submit();"/></div>
+        <c:if test="${!isLogin}">
+            <div id="my">  <a href="${pageContext.request.contextPath}/user/toshowPersonalData"><img id="my_img" src="${pageContext.request.contextPath}/statics/images/my.png" alt="我的文选"/></a> </div>
+            <div id="scar">  <a href="${pageContext.request.contextPath}/shop/list"><img id="scar_img" src="${pageContext.request.contextPath}/statics/images/scar.png" alt="购物车"/></a> </div>
+        </c:if>
+
+    </div>
+</div>

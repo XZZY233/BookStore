@@ -1,0 +1,17 @@
+package com.nuc.dao;
+
+import com.nuc.model.Order1;
+import com.nuc.model.User;
+
+import java.util.List;
+
+/**
+ * @program: book
+ * @description:
+ * @author: Zhang Chi
+ * @create: 2019-08-30 15:40
+ */
+public interface OrderMapper extends BaseMapper<Order1>{
+   public List<Order1> findByuId(User user);
+
+}

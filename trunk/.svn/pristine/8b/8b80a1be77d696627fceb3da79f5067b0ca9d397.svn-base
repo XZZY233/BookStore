@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nuc.dao.OrderMapper">
+    <resultMap type="com.nuc.model.Order1" id="OrderResultMap">
+        <id column="oId" property="oId" jdbcType="INTEGER" />
+        <result column="oNumber" property="oNumber" jdbcType="INTEGER" />
+        <result column="oPrice" property="oPrice" jdbcType="DECIMAL" />
+        <result column="oDate" property="oDate" jdbcType="DATE" />
+        <result column="oOver" property="oOver" jdbcType="VARCHAR" />
+
+
+    </resultMap>
+
+    <select id="findByuId"  resultMap="OrderResultMap" parameterType="com.nuc.model.Order1">
+		SELECT * from order1 where uId=#{uId}
+	</select>
+</mapper>

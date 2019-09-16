@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nuc.dao.TypeMapper">
+
+    <resultMap type="com.nuc.model.Type" id="typeResultMap">
+        <id column="tId" property="tId" jdbcType="INTEGER" />
+        <result column="tName" property="tName" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <!--    通过种类名查询种类-->
+    <select id="findByTname" parameterType="com.nuc.model.Type" resultMap="typeResultMap">
+        SELECT * FROM type WHERE tName=#{tName}
+    </select>
+
+    <!--注册种类-->
+    <insert id="insert" parameterType="com.nuc.model.Type"  >
+        INSERT INTO type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tName!=null">
+                tName,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tName!=null">
+                #{tName},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 通过多条件分页查询，返回数据集 -->
+    <select id="selectPageListUseDyc" parameterType="com.nuc.model.Page"
+            resultMap="typeResultMap">
+        SELECT tId,tName FROM type
+        <where>
+            <if test="paramEntity.tName!=null">and tName like #{paramEntity.tName}</if>
+        </where>
+        limit #{start},#{rows}
+    </select>
+
+
+    <!-- 通过多条件分页查询，返回总记录数 -->
+    <select id="selectPageCountUseDyc" parameterType="com.nuc.model.Page"
+            resultType="Integer">
+        select count(1) FROM type
+        <where>
+            <if test="paramEntity.tName!=null">and tName like #{paramEntity.tName}</if>
+        </where>
+    </select>
+
+    <!--    删除种类-->
+    <delete id="delete" parameterType="com.nuc.model.Type">
+        DELETE FROM  type WHERE tId=#{tId}
+    </delete>
+
+    <!-- 新增： 判断种类是否已存在 -->
+    <select id="objectNameIsExsit"  parameterType="com.nuc.model.Type"  resultType="Integer">
+	  select count(1) from type where tName=#{tName}
+	</select>
+
+    <!-- 修改：根据种类名，主键 查询是已否存在 -->
+    <select id="objectNameAndIdIsExsit" parameterType="com.nuc.model.Type"  resultType="Integer">
+	  select count(1) from type where tName=#{tName} and tId!=#{tId}
+	</select>
+
+    <!--修改种类信息-->
+    <update id="update" parameterType="com.nuc.model.Type">
+        update type set
+        <trim  suffixOverrides=",">
+            <if test="tName!=null">
+                tName=#{tName},
+            </if>
+        </trim>
+        where tId=#{tId}
+    </update>
+
+    <select id="findAllType" resultMap="typeResultMap">
+        SELECT * FROM type
+    </select>
+
+    <select id="findTidByTname" parameterType="String" resultType="Integer">
+        select tId from type where tName = #{tName}
+    </select>
+
+    <select id="findTypeByBid" parameterType="Integer" resultMap="typeResultMap">
+        SELECT t.tName
+            FROM type t
+            LEFT JOIN book_type m ON m.tId = t.tId
+            WHERE m.bid = #{bId}
+    </select>
+
+</mapper>

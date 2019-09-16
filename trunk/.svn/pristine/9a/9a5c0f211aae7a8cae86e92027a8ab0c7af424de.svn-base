@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nuc.dao.BookMapper">
+    <resultMap type="com.nuc.model.Book" id="booksResultMap">
+        <id column="bId" property="bId" jdbcType="INTEGER" />
+        <result column="bName" property="bName" jdbcType="VARCHAR" />
+        <result column="bAuthor" property="bAuthor" jdbcType="VARCHAR" />
+        <result column="bPrice" property="bPrice" jdbcType="DECIMAL" />
+        <result column="bDescribe" property="bDescribe" jdbcType="VARCHAR" />
+        <result column="bNumber" property="bNumber" jdbcType="INTEGER" />
+        <result column="bClickTimes" property="bClickTimes" jdbcType="INTEGER" />
+        <result column="bPath" property="bPath" jdbcType="VARCHAR" />
+        <collection property="types" ofType="com.nuc.model.Type">
+            <id column="tId" property="tId" jdbcType="INTEGER"/>
+            <result column="tName" property="tName" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+    <!--查询图书-->
+    <select id="findAllbooks" resultMap="booksResultMap">
+		select bId,bName,bAuthor,bPrice,bDescribe,bNumber,bClickTimes,bPath
+		from book
+	</select>
+
+    <!--通过类型查图书-->
+    <select id="findAllBookTypes" resultMap="booksResultMap">
+		SELECT *
+        FROM book b
+        INNER JOIN book_type m ON b.bId = m.bId
+        INNER JOIN type t ON m.tId = t.tId
+	</select>
+
+    <!--通过类型id查图书-->
+    <select id="findBooksByTid" resultMap="booksResultMap" parameterType="com.nuc.model.Type">
+        SELECT b.bId,bName,bAuthor,bPrice,bDescribe,bNumber,bClickTimes,bPath
+        FROM book b
+        INNER JOIN book_type m ON b.bId = m.bId
+        INNER JOIN type t ON m.tId = t.tId
+        WHERE t.tId = #{tId}
+    </select>
+
+    <!--通过点击数查图书-->
+    <select id="findBooksListByBclick" resultMap="booksResultMap">
+        select bId,bName,bAuthor,bPrice,bDescribe,bNumber,bClickTimes,bPath
+        from book
+        order by bClickTimes desc limit 0,12
+    </select>
+
+    <!--通过书id查图书-->
+    <select id="findBookByBid" resultType="com.nuc.model.Book" parameterType="com.nuc.model.Book">
+        select bId,bName,bAuthor,bPrice,bDescribe,bNumber,bClickTimes,bPath
+        from book
+        where bId = #{bId}
+    </select>
+
+    <!--通过书名查图书-->
+    <select id="findBookByBname" resultMap="booksResultMap" parameterType="com.nuc.model.Book">
+        select bId,bName,bAuthor,bPrice,bDescribe,bNumber,bClickTimes,bPath
+        from book
+        where bName = #{bName}
+    </select>
+
+    <!--添加图书-->
+    <insert id="insert" parameterType="com.nuc.model.Book"  >
+        INSERT INTO book
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bName!=null">
+                bName,
+            </if>
+            <if test="bAuthor!=null">
+                bAuthor,
+            </if>
+            <if test="bPrice!=null">
+                bPrice,
+            </if>
+            <if test="bDescribe!=null">
+                bDescribe,
+            </if>
+            <if test="bNumber!=null">
+                bNumber,
+            </if>
+            <if test="bPath!=null">
+                bPath,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="bName!=null">
+                #{bName},
+            </if>
+            <if test="bAuthor!=null">
+                #{bAuthor},
+            </if>
+            <if test="bPrice!=null">
+                #{bPrice},
+            </if>
+            <if test="bDescribe!=null">
+                #{bDescribe},
+            </if>
+            <if test="bNumber!=null" >
+                #{bNumber}
+            </if>
+            <if test="bPath!=null" >
+                #{bPath}
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 通过多条件分页查询，返回数据集 -->
+    <select id="selectPageListUseDyc" parameterType="com.nuc.model.Page"
+            resultMap="booksResultMap">
+        SELECT bId,bName,bAuthor,bPrice,bDescribe,bNumber,bClickTimes,bPath FROM book
+        <where>
+            <if test="paramEntity.bName!=null">and bName like #{paramEntity.bName}</if>
+        </where>
+        limit #{start},#{rows}
+    </select>
+
+    <!-- 通过多条件分页查询，返回总记录数 -->
+    <select id="selectPageCountUseDyc" parameterType="com.nuc.model.Page"
+            resultType="Integer">
+        select count(1) FROM book
+        <where>
+            <if test="paramEntity.bName!=null">and bName like #{paramEntity.bName}</if>
+        </where>
+    </select>
+
+    <!--    删除用户-->
+    <delete id="delete" parameterType="com.nuc.model.User">
+        DELETE FROM book WHERE bId=#{bId}
+    </delete>
+
+    <!-- 新增： 判断用户是否已存在 -->
+    <select id="objectNameIsExsit"  parameterType="com.nuc.model.User"  resultType="Integer">
+	  select count(1) from book where bName=#{bName}
+	</select>
+
+<!--    &lt;!&ndash; 修改：根据电话号码，主键 查询是已否存在 &ndash;&gt;-->
+<!--    <select id="objectNameAndIdIsExsit" parameterType="com.nuc.model.User"  resultType="Integer">-->
+<!--	  select count(1) from user where uTel=#{uTel} and uId!=#{uId}-->
+<!--	</select>-->
+
+    <!--修改用户信息-->
+    <update id="update" parameterType="com.nuc.model.User">
+        update user set
+        <trim  suffixOverrides=",">
+            <if test="uName!=null">
+                uName=#{uName},
+            </if>
+            <if test="uTel!=null">
+                uTel=#{uTel},
+            </if>
+            <if test="uPwd!=null">
+                uPwd=#{uPwd},
+            </if>
+            <if test="uAddress!=null">
+                uAddress=#{uAddress},
+            </if>
+            <if test="uGender!=null" >
+                uGender=#{uGender}
+            </if>
+        </trim>
+        where uId=#{uId}
+    </update>
+</mapper>

@@ -1,0 +1,56 @@
+body{
+    background-image: url("../images/stockAdminImage13.jpg");
+}
+ul{
+    list-style-type:none
+}
+a{
+    text-decoration: none;
+    color: black;
+}
+a:hover{
+    color: #FF0000;
+}
+div.digg{padding:3px;margin:3px;text-align:center}
+div.digg a{border:black 1px solid;padding:2px 5px;margin:2px;color:black;text-decoration:none}
+div.digg a:hover{color:red;}
+div.digg a:active{color:#000;}
+div.digg span.current{border:solid 1px black;padding:2px 5px;font-weight:bold;margin:2px;color:black;}
+div.digg span.disabled{border:#eee 1px solid;padding:2px 5px;margin:2px;color:#ddd;}
+#searchBooksFirst{
+    position: relative;
+    left: 300px;
+}
+#searchBooksSecond{
+    position: relative;
+    left: 400px;
+    top: 45px;
+}
+#searchBooksThird{
+    position: relative;
+    left: 720px;
+}
+#searchBooksForth{
+    position: absolute;
+    left: 250px;
+}
+#searchBooksFifth{
+    position: absolute;
+    left: 880px;
+    top: 289px;
+}
+#searchBooksSixth{
+    position: absolute;
+    left: 880px;
+    top: 79px;
+}
+#searchBooksSeventh{
+    position: absolute;
+    left: 880px;
+    top: 185px;
+}
+#searchBooksEighth{
+    position: absolute;
+    left: 880px;
+    top: 500px;
+}

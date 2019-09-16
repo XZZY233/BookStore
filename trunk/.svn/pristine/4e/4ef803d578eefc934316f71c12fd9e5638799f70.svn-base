@@ -1,0 +1,45 @@
+.secauto{
+    font-family: 微软雅黑;
+    font-size: 18px;
+    line-height: 30px;
+    margin: 0 auto ;
+    padding: 0;
+    width: 980px;
+}
+.heaauto{
+    font-family: 微软雅黑;
+    font-size: 18px;
+    line-height: 30px;
+}
+
+.secauto h2{
+    margin: 0;
+    padding: 0;
+    font-size: 25px;
+    line-height: 50px;
+}
+.secauto dl{
+    margin: 0;
+    padding: 0;
+    margin-left: 50px;
+}
+.secauto dd{
+    margin: 0;
+    padding: 0;
+    display: none;
+}
+.imgLeft {
+    padding: 0;
+    float: left;
+    width: 260px;
+}
+.textRight{
+    width: 720px;
+    float: right;
+
+}
+.butt1 input{
+    background: #e43c3f;
+    color: white;
+    height: 40px;
+}

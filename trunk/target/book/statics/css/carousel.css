@@ -1,0 +1,57 @@
+#div_carousel{
+    margin: 0;
+    padding: 0;
+    height: 1px;
+}
+#mainFrame{
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 93px;
+    right: 383px;
+}
+#a1{
+    display: block;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    background: #78b5d9;
+    color: #fff;
+    text-align: center;
+    line-height: 20px;
+    text-decoration: none;
+
+    position: absolute;
+    top: 395px;
+    right: 320px;
+}
+#a2{
+    display: block;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    background: #78b5d9;
+    color: #fff;
+    text-align: center;
+    line-height: 20px;
+    text-decoration: none;
+
+    position: absolute;
+    top: 395px;
+    right: 295px;
+}
+#a3{
+    display: block;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    background: #78b5d9;
+    color: #fff;
+    text-align: center;
+    line-height: 20px;
+    text-decoration: none;
+
+    position: absolute;
+    top: 395px;
+    right: 270px;
+}

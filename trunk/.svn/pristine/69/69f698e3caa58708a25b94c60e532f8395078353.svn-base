@@ -1,0 +1,13 @@
+package com.nuc.dao;
+
+import com.nuc.model.Admin;
+
+/**
+ * @program: book
+ * @description:
+ * @author: Zhang Chi
+ * @create: 2019-08-31 10:47
+ */
+public interface AdminMapper extends BaseMapper<Admin> {
+
+}

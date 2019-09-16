@@ -1,0 +1,16 @@
+package com.nuc.service.impl;
+
+import com.nuc.model.User;
+import com.nuc.service.UserService;
+import org.springframework.stereotype.Service;
+
+/**
+ * @program: book
+ * @description:
+ * @author: Zhang Chi
+ * @create: 2019-08-30 17:56
+ */
+@Service("userService")
+public class UserServiceImpl extends BaseServiceImpl<User> implements UserService {
+
+}

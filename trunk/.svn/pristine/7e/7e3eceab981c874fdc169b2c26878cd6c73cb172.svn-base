@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nuc.dao.AdminMapper">
+    <resultMap type="com.nuc.model.Admin" id="adminResultMap">
+        <id column="aId" property="aId" jdbcType="INTEGER" />
+        <result column="aName" property="aName" jdbcType="VARCHAR" />
+        <result column="aPwd" property="aPwd" jdbcType="VARCHAR" />
+        <result column="aGender" property="aGender" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="select" parameterType="com.nuc.model.Admin" resultMap="adminResultMap">
+        SELECT * FROM admin WHERE aName=#{aName} AND aPwd=#{aPwd}
+    </select>
+</mapper>

@@ -1,0 +1,15 @@
+package com.nuc.service;
+
+import com.nuc.model.Type;
+
+import java.util.List;
+
+public interface TypeService extends BaseService<Type> {
+    Type findByTname(Type type);
+
+    List<Type> findAllType();
+
+    int findTidByTname(String tName);
+
+    List<Type> findTypeByBid(int bId);
+}

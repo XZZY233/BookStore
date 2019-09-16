@@ -1,0 +1,70 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="com.nuc.model.Book" %><%--
+<%--
+  Created by IntelliJ IDEA.
+  User: DELL
+  Date: 2019/7/12
+  Time: 8:38
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" isELIgnored="false" language="java" %>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图书详情</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/statics/css/book.css">
+    <script src="${pageContext.request.contextPath}/statics/js/jquery-1.12.4.js"></script>
+    <script src="${pageContext.request.contextPath}/statics/js/book.js"></script>
+</head>
+<body>
+<header class="heaauto">
+  <a href="${pageContext.request.contextPath}/books/list"> <input type="image" src="${pageContext.request.contextPath}/statics/images/back.png" ></a>
+</header>
+<section class="secauto">
+    <%
+        Book book = null;
+        if (request.getAttribute("book") != null) {
+            book = (Book) request.getAttribute("book");
+        }
+    %>
+    <div class="imgLeft">
+        <img src="${pageContext.request.contextPath}/books/image?path=<%= book.getbPath()%>" height="159" width="125"/>
+    </div>
+    <div class="textRight">
+        <h2><%= book.getbName()%></h2>
+        <p class="first">
+            自营图书几十万畅销品种阶梯满减，抽奖赢魅蓝note3，JDRead阅读器。
+        </p>
+        <p><%= book.getbAuthor()%></p>
+        <div>
+            <p class="senond">商城 价 :<span id="one">￥<%= book.getbPrice()%></span> [9.2折] [定价:<span id="two">￥35.00</span>] (降价通知)</p>
+            <p >促销信息：手机专享价￥32.20</p>
+            <P>库存：<%= book.getbNumber()%>万册</P>
+            <dl class="four">
+                <dt>以下促销可以在购物车任选其一</dt>
+                <dd><span>加价购</span>：满99另加6.18可购物车内任选其一</dd>
+                <dd><span>满减</span>：满100.00减20.00，满200.00减50.00</dd>
+            </dl>
+            <p class="third">领卷：<span>105-6</span>，<span>205-16</span></p>
+
+            <form action="${pageContext.request.contextPath}/shopping/toShopping?bid=<%=book.getbId()%>" method="post" name="form">
+                <select name="number">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+                <c:set var="isLogin" value="${empty sessionScope.user}"/>
+                <c:if test="${!isLogin}">
+                <input  type="submit" value="加入购物车">
+                </c:if>
+            </form>
+
+        </div>
+    </div>
+</section>
+<footer>
+    <%@include file="index_bottom.jsp"%>
+</footer>
+</body>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nuc.dao.BookTypeMapper">
+    <resultMap type="com.nuc.model.BookType" id="booktypeResultMap">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="bId" property="bId" jdbcType="INTEGER" />
+        <result column="tId" property="tId" jdbcType="INTEGER" />
+    </resultMap>
+
+    <insert id="insert" parameterType="com.nuc.model.BookType"  >
+        INSERT INTO book_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bId!=null">
+                bId,
+            </if>
+            <if test="tId!=null">
+                tId
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="bId!=null">
+                #{bId},
+            </if>
+            <if test="tId!=null">
+                #{tId}
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.nuc.model.BookType">
+        update book_type set
+        <trim  suffixOverrides=",">
+            <if test="bId!=null">
+                bId=#{bId},
+            </if>
+            <if test="tId!=tId">
+                tId=#{tId}
+            </if>
+        </trim>
+        where bId=#{bId}
+    </update>
+
+    <update id="delete" parameterType="com.nuc.model.BookType">
+          DELETE FROM book_type WHERE bId=#{bId}
+    </update>
+</mapper>

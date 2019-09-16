@@ -1,0 +1,31 @@
+package com.nuc.service;
+
+
+
+
+import com.nuc.model.Book;
+
+import java.util.List;
+
+/**
+ * @program: books
+ * @description: 书类Service
+ * @author: Zhang Chi
+ * @create: 2019-07-12 16:49
+ */
+public interface BookService extends BaseService<Book> {
+    public List<Book> findAllbooks();
+    public List<Book> findBooksByTid(int Tid);
+    public List<Book> findBooksListByBclick();
+    public Book findBookByBid(int bid);
+    public Book findBookByBname(String bname);
+    public int findBidByBname(String bname);
+    List<Book> searchBookByBname(String bName);
+//    public int addBook(Book book);
+//    public int deleteBook(int bid);
+//    public int updateBook(double price, int bid);
+//    public int getBooksCountByTid(int Tid);
+    public int getBooksCount();
+    public List<Book> getPageBooksList(int page);
+
+}

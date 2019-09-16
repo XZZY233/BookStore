@@ -1,0 +1,33 @@
+package com.nuc.dao;
+
+
+
+
+import com.nuc.model.Book;
+import com.nuc.model.Order1;
+import com.nuc.model.Type;
+import com.nuc.model.User;
+
+import java.util.List;
+
+/**
+ * @program: books
+ * @description: 书类的基本Dao
+ * @author: Zhang Chi
+ * @create: 2019-07-11 17:26
+ */
+public interface BookMapper extends BaseMapper<Book> {
+    public List<Book> findAllbooks();
+    public List<Book> findAllBookType();
+    public List<Book> findBooksByTid(Type type);
+    public List<Book> findBooksListByBclick();
+    public Book findBookByBid(Book book);
+    public Book findBookByBname(Book book);
+    public int addBook(Book book);
+    public int deleteBook(int bid);
+    public int updateBook(double price, int bid);
+    public int getBooksCountByTid(int Tid);
+    public int getBooksCount();
+    public List<Book> getPageBooksList(int page);
+    List<Book> findBooksByOId(Order1 order);
+}

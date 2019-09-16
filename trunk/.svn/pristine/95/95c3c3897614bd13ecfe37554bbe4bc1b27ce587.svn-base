@@ -1,0 +1,13 @@
+package com.nuc.service.impl;
+
+import com.nuc.model.Type;
+import com.nuc.service.TypeService;
+import org.springframework.stereotype.Service;
+
+@Service("typeService")
+public class TypeServiceImpl extends BaseServiceImpl<Type> implements TypeService {
+    @Override
+    public Type findByTname(Type type) {
+        return typeMapper.findByTname(type);
+    }
+}

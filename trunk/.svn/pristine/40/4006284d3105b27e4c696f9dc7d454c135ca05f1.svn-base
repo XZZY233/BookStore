@@ -1,0 +1,87 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: lenovo
+  Date: 2019/7/11
+  Time: 16:18
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" isELIgnored="false" language="java" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/statics/css/showPersonal.css">
+</head>
+<body>
+<section>
+    <div id="perCentre">
+        <div id="left_first">
+            <h2>个人中心</h2>
+            <hr/>
+            <p><a href="${pageContext.request.contextPath}/user/toshowPersonalData">&nbsp;我的信息</a></p>
+            <p><a href="${pageContext.request.contextPath}/user/toshowPersonPassWord">&nbsp;修改密码</a></p>
+            <p>  <a href="${pageContext.request.contextPath}/base/goURL/personnoalDate/confirmReceipt">&nbsp;收货管理</a></p>
+            <p><a href="${pageContext.request.contextPath}/books/list">&nbsp;返回首页</a></p>
+        </div>
+        <div id="left_second">
+            <h2>我的记录</h2>
+            <hr/>
+            <p> <a href="${pageContext.request.contextPath}/base/goURL/personnoalDate/showPersonOrder">&nbsp;购买记录</a></p>
+            <p> <a href="${pageContext.request.contextPath}/base/goURL/personnoalDate/showOrder">&nbsp;我的订单</a></p>
+            <p><a href="${pageContext.request.contextPath}/books/list">&nbsp;返回首页</a></p>
+        </div>
+    </div>
+    <div id="showData">
+        <h3>卐我的信息卍</h3>
+        <br><br>
+        <hr/>
+        <form action="${pageContext.request.contextPath}/user/changeBasic" method="post">
+            <table>
+                <tr>
+                    <td><input type="hidden" name="uId" value="${sessionScope.user.uId}" ></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;昵称：</td>
+                    <td><input class="text" type="text" name="uName" value="${sessionScope.user.uName}"></td>
+                    <td><span>:昵称可以免费修改，但是不能为空</span></td>
+                </tr>
+                <tr>
+                    <td>收获地址：</td>
+                    <c:set var="haveaddress" value="${empty sessionScope.user.uAddress}"/>
+                    <c:if test="${haveaddress}">
+                        <td><input class="text" type="text" name="uAddress" placeholder="请完善地址！"></td>
+                    </c:if>
+                    <c:if test="${!haveaddress}">
+                        <td><input class="text" type="text" name="uAddress" value="${sessionScope.user.uAddress}"></td>
+                    </c:if>
+                    <td><span>&nbsp;&nbsp;:请填写准确地址，以便快递能顺利到达</span></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;性别:</td>
+                    <c:set var="haveGender" value="${empty sessionScope.user.uGender}"/>
+                    <c:if test="${haveGender}">
+                        <td><input type="radio" name="uGender" value="男" >♂&nbsp;&nbsp;<input type="radio" name="ugender" value="女">♀</td>
+                    </c:if>
+                    <c:if test="${!haveGender}">
+                        <c:if test="${sessionScope.user.uGender=='男'}">
+                            <td><input type="radio" name="uGender" value="男" checked>♂&nbsp;&nbsp;<input type="radio" name="ugender" value="女">♀</td>
+                        </c:if>
+                        <c:if test="${sessionScope.user.uGender=='女'}">
+                            <td><input type="radio" name="uGender" value="男" >♂&nbsp;&nbsp;<input type="radio" name="ugender" value="女" checked>♀</td>
+                        </c:if>
+                    </c:if>
+                    <td></td>
+                </tr>
+            </table>
+            <hr/>
+            <div><input class="form_sigup" type="submit" value="保存"></div>
+        </form>
+    </div>
+</section>
+<footer>
+    <%@include file="/WEB-INF/jsp/indexpage/index_bottom.jsp"%>
+</footer>
+</body>
+</html>

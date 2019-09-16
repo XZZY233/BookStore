@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nuc.dao.OrderBookMapper">
+    <resultMap type="com.nuc.model.OrderBookEntity" id="OrderResultMap">
+        <id column="oId" property="oId" jdbcType="INTEGER" />
+        <result column="oPrice" property="oPrice" jdbcType="DECIMAL" />
+        <result column="oDate" property="oDate" jdbcType="DATE" />
+         <result column="uId" property="uId" />
+        <result column="uName" property="uName"/>
+        <result column="uTel" property="uTel"/>
+         <result column="uAddress" property="uAddress"/>
+        <result column="number" property="number"/>
+        <result column="bName" property="bName"/>
+        <result column="bPrice" property="bPrice"/>
+        <result column="bId" property="bId"/>
+    </resultMap>
+    <!-- 通过Uid查找订单 -->
+    <select id="findByuId"  resultMap="OrderResultMap" parameterType="com.nuc.model.OrderBookEntity">
+		SELECT * from order1 where uId=#{uId}
+	</select>
+    <!-- 删除订单-->
+    <delete id="delete" parameterType="com.nuc.model.OrderBookEntity">
+     DELETE order1,book_order FROM order1 LEFT JOIN book_order ON order1.oId=book_order.oId WHERE order1.oId=#{oId}
+    </delete>
+    <!-- 通过多条件分页查询，返回数据集 -->
+    <select id="selectPageListUseDyc" parameterType="com.nuc.model.Page" resultMap="OrderResultMap">
+        SELECT a.oId,a.oPrice,a.oDate,b.uAddress,b.uName,b.uId,b.uTel,c.number,d.bName,d.bPrice,d.bId
+        FROM order1 a INNER JOIN  user b ON a.uId=b.uId INNER JOIN book_order c on c.oId=a.oId  INNER JOIN book d on d.bId=c.bId
+        where a.uId=#{paramEntity.uId} and a.oOver='是'
+        order by a.oId
+        limit #{start},#{rows}
+    </select>
+
+    <!-- 通过多条件分页查询，返回总记录数 -->
+    <select id="selectPageCountUseDyc" parameterType="com.nuc.model.Page"
+            resultType="Integer">
+        SELECT count(1)
+        FROM order1 a INNER JOIN  user b ON a.uId=b.uId INNER JOIN book_order c on c.oId=a.oId  INNER JOIN book d on d.bId=c.bId
+        where a.uId=#{paramEntity.uId}
+    </select>
+
+</mapper>

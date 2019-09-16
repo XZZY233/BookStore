@@ -1,0 +1,145 @@
+package com.nuc.service.impl;
+
+
+
+import com.nuc.model.Book;
+import com.nuc.model.Type;
+import com.nuc.service.BookService;
+import org.apache.poi.ss.formula.functions.T;
+import org.springframework.stereotype.Service;
+
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @program: books
+ * @description:
+ * @author: Zhang Chi
+ * @create: 2019-07-12 17:09
+ */
+@Service("booksService")
+public class BookServiceImpl extends BaseServiceImpl<Book> implements BookService {
+    @Override
+    public List<Book> findAllbooks() {
+        return bookMapper.findAllbooks();
+    }
+
+    @Override
+    public List<Book> findBooksByTid(int Tid) {
+        Type type = new Type();
+        type.settId(Tid);
+        return bookMapper.findBooksByTid(type);
+    }
+
+    @Override
+    public List<Book> findBooksListByBclick(){
+        return bookMapper.findBooksListByBclick();
+    }
+
+    @Override
+    public Book findBookByBid(int bid) {
+        Book book = new Book();
+        book.setbId(bid);
+        return bookMapper.findBookByBid(book);
+    }
+
+    @Override
+    public Book findBookByBname(String bname) {
+        Book book = new Book();
+        book.setbName(bname);
+        return bookMapper.findBookByBname(book);
+    }
+
+//    @Override
+//    public int addBook(Book book) {
+//        Connection conn=null;
+//        int count=0;
+//        try {
+//            conn= DatabaseUtil.getConnection();
+//            count=new BookDaoImpl(DatabaseUtil.getConnection()).addBook(book);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }finally {
+//            DatabaseUtil.closeAll(conn,null,null);
+//        }
+//        return count;
+//    }
+//
+//    @Override
+//    public int deleteBook(int bid) {
+//        Connection conn=null;
+//        int count=0;
+//        try {
+//            conn= DatabaseUtil.getConnection();
+//            count=new BookDaoImpl(conn).deleteBook(bid);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }finally {
+//            DatabaseUtil.closeAll(conn,null,null);
+//        }
+//        return count;
+//    }
+//
+//    @Override
+//    public int updateBook( double price,int bid) {
+//        Connection conn=null;
+//        int count=0;
+//        try {
+//            conn= DatabaseUtil.getConnection();
+//            count=new BookDaoImpl(conn).updateBook(price,bid);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }finally {
+//            DatabaseUtil.closeAll(conn,null,null);
+//        }
+//        return count;
+//    }
+//
+//
+//
+//    @Override
+//    public int getBooksCountByTid(int Tid) {
+//        Connection conn=null;
+//        int count=0;
+//        try {
+//            conn= DatabaseUtil.getConnection();
+//            count=new BookDaoImpl(conn).getBooksCountByTid(Tid);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }finally {
+//            DatabaseUtil.closeAll(conn,null,null);
+//        }
+//        return count;
+//    }
+//
+//    @Override
+//    public int getBooksCount() {
+//        Connection conn=null;
+//        int count=0;
+//        try {
+//            conn= DatabaseUtil.getConnection();
+//            count=new BookDaoImpl(conn).getBooksCount();
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }finally {
+//            DatabaseUtil.closeAll(conn,null,null);
+//        }
+//        return count;
+//    }
+//
+//    @Override
+//    public List<Book> getPageBooksList(int page) {
+//        Connection conn=null;
+//        List<Book> list=new ArrayList<Book>();
+//        try {
+//            conn= DatabaseUtil.getConnection();
+//            list=new BookDaoImpl(conn).getPageBooksList(page);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }finally {
+//            DatabaseUtil.closeAll(conn,null,null);
+//        }
+//        return list;
+//    }
+}

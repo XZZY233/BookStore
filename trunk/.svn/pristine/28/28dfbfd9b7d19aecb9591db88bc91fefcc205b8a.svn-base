@@ -1,0 +1,140 @@
+package com.nuc.model;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+/**
+ * @program: book
+ * @description:
+ * @author: Zhang Chi
+ * @create: 2019-09-04 10:45
+ */
+public class OrderBookEntity {
+
+    private int oId;
+    private int uId;
+    private String oOver;
+    private String uName;
+
+    public String getoOver() {
+        return oOver;
+    }
+
+    public void setoOver(String oOver) {
+        this.oOver = oOver;
+    }
+
+    public int getoId() {
+        return oId;
+    }
+
+    public void setoId(int oId) {
+        this.oId = oId;
+    }
+
+    public int getuId() {
+        return uId;
+    }
+
+    public void setuId(int uId) {
+        this.uId = uId;
+    }
+
+    public String getuName() {
+        return uName;
+    }
+
+    public void setuName(String uName) {
+        this.uName = uName;
+    }
+
+    public String getuTel() {
+        return uTel;
+    }
+
+    public void setuTel(String uTel) {
+        this.uTel = uTel;
+    }
+
+    public String getuAddress() {
+        return uAddress;
+    }
+
+    public void setuAddress(String uAddress) {
+        this.uAddress = uAddress;
+    }
+
+    public int getbId() {
+        return bId;
+    }
+
+    public void setbId(int bId) {
+        this.bId = bId;
+    }
+
+    public String getbName() {
+        return bName;
+    }
+
+    public void setbName(String bName) {
+        this.bName = bName;
+    }
+
+    public BigDecimal getbPrice() {
+        return bPrice;
+    }
+
+    public void setbPrice(BigDecimal bPrice) {
+        this.bPrice = bPrice;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public BigDecimal getoPrice() {
+        return oPrice;
+    }
+
+    public void setoPrice(BigDecimal oPrice) {
+        this.oPrice = oPrice;
+    }
+
+    public Date getoDate() {
+        return oDate;
+    }
+
+    public void setoDate(Date oDate) {
+        this.oDate = oDate;
+    }
+
+    private String uTel;
+    private String uAddress;
+    private int bId;
+    private String bName;
+    private BigDecimal bPrice;
+    private int number;
+    private BigDecimal oPrice;
+    private Date oDate;
+
+    @Override
+    public String toString() {
+        return "OrderBookEntity{" +
+                "oId=" + oId +
+                ", uId=" + uId +
+                ", uName='" + uName + '\'' +
+                ", uTel='" + uTel + '\'' +
+                ", uAddress='" + uAddress + '\'' +
+                ", bId=" + bId +
+                ", bName='" + bName + '\'' +
+                ", bPrice=" + bPrice +
+                ", number=" + number +
+                ", oPrice=" + oPrice +
+                ", oDate=" + oDate +
+                '}';
+    }
+}

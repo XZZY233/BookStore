@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nuc.dao.OrderMapper">
+    <resultMap type="com.nuc.model.Order1" id="OrderResultMap">
+        <id column="oId" property="oId" jdbcType="INTEGER" />
+        <result column="oPrice" property="oPrice" jdbcType="DECIMAL" />
+        <result column="oDate" property="oDate" jdbcType="DATE" />
+        <result column="oOver" property="oOver" jdbcType="VARCHAR" />
+        <result column="uId" property="uId" jdbcType="INTEGER" />
+    </resultMap>
+
+    <insert id="insert" parameterType="com.nuc.model.Order1" >
+        insert into order1
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="oPrice!=null">
+                oPrice,
+            </if>
+            <if test="oDate!=null">
+                oDate,
+            </if>
+            <if test="oOver!=null">
+                oOver,
+            </if>
+            <if test="uId!=null">
+                uId
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="oPrice!=null">
+                #{oPrice},
+            </if>
+            <if test="oDate!=null">
+                #{oDate},
+            </if>
+            <if test="oOver!=null">
+                #{oOver},
+            </if>
+            <if test="uId!=null">
+                #{uId}
+            </if>
+        </trim>
+    </insert>
+
+<!--    获取最新的订单id-->
+    <select id="getMaxOId" resultMap="OrderResultMap">
+        SELECT MAX(oId) as oId FROM order1
+    </select>
+
+    <!--    确认收货-->
+    <update id="update" parameterType="com.nuc.model.Order1">
+        update order1 set oOver="是" where oId=#{oId}
+    </update>
+</mapper>

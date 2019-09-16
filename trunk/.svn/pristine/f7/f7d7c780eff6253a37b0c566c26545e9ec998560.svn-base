@@ -1,0 +1,76 @@
+package com.nuc.service.impl;
+
+import com.nuc.dao.AdminMapper;
+import com.nuc.dao.BaseMapper;
+import com.nuc.dao.UserMapper;
+import com.nuc.model.Page;
+import com.nuc.service.BaseService;
+import org.apache.poi.ss.formula.functions.T;
+import org.springframework.beans.factory.annotation.Autowired;
+
+/**
+ * @program: book
+ * @description:
+ * @author: Zhang Chi
+ * @create: 2019-08-30 17:27
+ */
+public class BaseServiceImpl<T> implements BaseService<T> {
+
+    @Autowired
+    protected BaseMapper<T> baseMapper;
+
+    @Autowired
+    protected UserMapper userMapper;
+
+    @Autowired
+    protected AdminMapper adminMapper;
+
+
+    @Override
+    public int insert(T entity) throws Exception {
+        return baseMapper.insert(entity);
+    }
+
+    @Override
+    public int update(T entity) throws Exception {
+        return baseMapper.update(entity);
+    }
+
+    @Override
+    public int delete(T entity) throws Exception {
+        return baseMapper.delete(entity);
+    }
+
+    @Override
+    public T select(T entity) {
+        return baseMapper.select(entity);
+    }
+
+
+    @Override
+    public Page<T> selectPageUseDyc(Page<T> page) {
+        page.setList(baseMapper.selectPageListUseDyc(page));
+        page.setTotalRecord(baseMapper.selectPageCountUseDyc(page));
+        return page;
+    }
+
+    @Override
+    public int objectNameIsExsit(T entity) {
+        return baseMapper.objectNameIsExsit(entity);
+    }
+
+    @Override
+    public int objectNameAndIdIsExsit(T entity) {
+        return baseMapper.objectNameAndIdIsExsit(entity);
+    }
+
+    @Override
+    public int objectNumIsExsit(T entity) {
+        return baseMapper.objectNumIsExsit(entity);
+    }
+
+    @Override
+    public int objectNumAndIdIsExsit(T entity) {
+        return baseMapper.objectNumAndIdIsExsit(entity);
+    }
+}

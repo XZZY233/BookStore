@@ -1,0 +1,63 @@
+package com.nuc.controller;
+
+import com.nuc.model.Book;
+import com.nuc.model.Type;
+import com.nuc.service.BookService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
+@Controller
+@RequestMapping(value = "/books")
+public class BookListController extends BaseController {
+
+    @Autowired
+    private BookService bookService;
+
+    @RequestMapping(value = "/list")
+    public String list(HttpServletRequest request){
+
+        //类别书
+        for (int i=1;i<=8;i++){
+            String key = "list_type"+i;
+            request.setAttribute(key,bookService.findBooksByTid(i));
+        }
+
+        //排行榜
+        request.setAttribute("list_top",bookService.findBooksListByBclick());
+
+        //所有书
+        request.setAttribute("list_books",bookService.findAllbooks());
+
+        return "forward:/WEB-INF/jsp/indexpage/index.jsp";
+    }
+
+//    @RequestMapping(value = "/search")
+//    public ModelAndView search(HttpServletRequest request){
+//        System.out.println("查询");
+//        ModelAndView mav = new ModelAndView();
+//
+//        String search_bname = request.getParameter("search_content_text");
+//        BookService bookService = new BookServiceImpl();
+//        Book book = bookService.findBookByBname(search_bname);
+//        System.out.println("search_bname"+search_bname);
+//        System.out.println("book"+book);
+//        if(book == null){
+//            mav.setViewName("index_elements/index_nobook");
+//        }else {
+//            mav.addObject("book",book);
+//            mav.setViewName("book");
+//        }
+//        return mav;
+//    }
+
+    @RequestMapping("/bookInfo")
+    public String bookInfo(int bookId, HttpServletRequest request){
+        request.setAttribute("book",bookService.findBookByBid(bookId));
+        return "forward:/WEB-INF/jsp/indexpage/book.jsp";
+    }
+}

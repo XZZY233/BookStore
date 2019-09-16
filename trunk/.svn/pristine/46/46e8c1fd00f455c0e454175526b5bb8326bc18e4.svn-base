@@ -1,0 +1,68 @@
+import com.nuc.dao.OrderMapper;
+import com.nuc.model.Order1;
+import com.nuc.model.User;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.util.List;
+
+/**
+ * @program: book
+ * @description:
+ * @author: Zhang Chi
+ * @create: 2019-08-30 16:01
+ */
+public class testSQL {
+
+    @Autowired
+    OrderMapper orderMapper;
+
+    public static void main(String[] args) throws IOException {
+
+        /*Reader reader = null;
+        reader = Resources.getResourceAsReader("myBatis-config.xml");
+        if (reader == null) {
+            System.out.println("reader null");
+        } else {
+            System.out.println(reader);
+        }
+
+        SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(reader);
+        if (sessionFactory == null) {
+            System.out.println("sessionFactory null");
+        }else {
+            System.out.println(sessionFactory);
+        }
+        SqlSession session = sessionFactory.openSession();
+
+        if (session == null) {
+            System.out.println("session null");
+        } else {
+            System.out.println(session);
+        }*/
+
+        //OrderMapper orderMapper = session.getMapper(OrderMapper.class);
+
+
+
+    }
+@Test
+    public void test(){
+    User user=new User();
+    user.setuId(1);
+
+    if (orderMapper == null) {
+        System.out.println("orderMapper null");
+    }
+    List<Order1> order1s= orderMapper.findByuId(user);
+    for (Order1 or:order1s){
+        System.out.println(or);
+    }
+    }
+}

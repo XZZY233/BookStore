@@ -1,0 +1,61 @@
+package com.nuc.service.impl;
+
+
+
+import com.nuc.model.Book;
+import com.nuc.model.Type;
+import com.nuc.service.BookService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * @program: books
+ * @description:
+ * @author: Zhang Chi
+ * @create: 2019-07-12 17:09
+ */
+@Service("booksService")
+public class BookServiceImpl extends BaseServiceImpl<Book> implements BookService {
+    @Override
+    public List<Book> findAllbooks() {
+        return bookMapper.findAllbooks();
+    }
+
+    @Override
+    public List<Book> findBooksByTid(int Tid) {
+        Type type = new Type();
+        type.settId(Tid);
+        return bookMapper.findBooksByTid(type);
+    }
+
+    @Override
+    public List<Book> findBooksListByBclick(){
+        return bookMapper.findBooksListByBclick();
+    }
+
+    @Override
+    public Book findBookByBid(int bid) {
+        Book book = new Book();
+        book.setbId(bid);
+        return bookMapper.findBookByBid(book);
+    }
+
+    @Override
+    public Book findBookByBname(String bname) {
+        Book book = new Book();
+        book.setbName(bname);
+        return bookMapper.findBookByBname(book);
+    }
+
+    @Override
+    public int findBidByBname(String bname) {
+        return bookMapper.findBidByBname(bname);
+    }
+
+    @Override
+    public List<Book> searchBookByBname(String bName) {
+        return bookMapper.searchBookByBname(bName);
+    }
+
+}
